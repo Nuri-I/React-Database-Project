@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { data } from 'jquery';
 
 const Login = () => {
 
@@ -16,8 +17,12 @@ const Login = () => {
     const HandleSubmit = (e) => {
         e.preventDefault();
         axios({
-            method: 'get',
-            url: 'http://localhost:8080/react-database/src/Components/Backend/Login.php/'
+            method: 'post',
+            url: 'http://localhost:8080/react-database/src/Components/Backend/Login.php/',
+            data: {
+                    'username': Username,
+                    'password': Password
+            }
         })
         .then(response => console.log(response.data))
         .catch(error => console.log(error.data));
