@@ -34,11 +34,4 @@ if (!password_verify($password, $storedHash['pass'])){
 echo $storedHash["pass"];
 exit();
 
-
-
-
-//TO DO: Create session with cookie to keep the user logged in
-echo "connected to database";
-
-
 ?>
