@@ -24,10 +24,19 @@ const Login = () => {
                     'password': Password
             }
         })
-        .then(response => console.log(response.data))
+        .then(response => sessionStorage.setItem('token', response.data))
         .catch(error => console.log(error.data));
         };
 
+    const LoggedIn = (e) => {
+        console.log(sessionStorage.getItem('token'))
+        // e.preventDefault();
+        // axios({
+        //     method: 'get',
+        //     url: 'http://localhost:8080/react-database/src/Components/Backend/Login.php/',
+        //     headers : ''
+        // })
+    }
 // This project was developed with WAMP local server where the host is 8080 instead of 80
 
     return (
@@ -55,7 +64,11 @@ const Login = () => {
 
             </form>
             <div id="tempAlert" />
-        
+        <button
+        onClick={(event) => LoggedIn(event)}
+        >
+            show token
+        </button>
         </>
     )
 };
