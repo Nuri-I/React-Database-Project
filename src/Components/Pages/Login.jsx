@@ -1,43 +1,80 @@
 import axios from 'axios';
-import { data } from 'jquery';
-
+import {useState} from 'react'
 const Login = () => {
+    const [outputText, setOutputText] = useState('test') 
+    const [username, setUsername] = useState('test') 
+    const [password, setPassword] = useState('test') 
+    // var username,password
 
-    var Username;
-    var Password;
     const updateInputUsername = (e) => {
-        Username = (e.target.value)
-        console.log(Username)
+        setUsername(e.target.value)
+        console.log(username)
     };
     const updateInputPassword = (e) => {
-        Password = (e.target.value)
-        console.log(Password)
+        setPassword(e.target.value)
+        console.log(password)
     };
     
-    const HandleSubmit = (e) => {
-        e.preventDefault();
+
+    // This project was developed with WAMP, an apachi based local server where. the host for the server is 8080 
+    const HandleSubmit = () => {
+
         axios({
             method: 'post',
             url: 'http://localhost:8080/react-database/src/Components/Backend/Login.php/',
             data: {
-                    'username': Username,
-                    'password': Password
+                    'username': username,
+                    'password': password
             }
         })
-        .then(response => sessionStorage.setItem('token', response.data))
-        .catch(error => console.log(error.data));
+        .then(response => {
+        
+            sessionStorage.setItem('token', response.data.token)
+            console.log(response.data.message)
+            setOutputText(response.data.message)
+        })
+        .catch(error => console.log("something went wrong ..." + error.data));
         };
 
-    const LoggedIn = (e) => {
-        console.log(sessionStorage.getItem('token'))
-        // e.preventDefault();
-        // axios({
-        //     method: 'get',
-        //     url: 'http://localhost:8080/react-database/src/Components/Backend/Login.php/',
-        //     headers : ''
-        // })
+
+    const LoggedIn = () => {
+        if (!sessionStorage.getItem('token')){
+            //TODO not logged in message
+            return;
+        }
+        axios({
+            method: 'get',
+            url: 'http://localhost:8080/react-database/src/Components/Backend/authenticate.php/',
+            headers : {
+                'Authorization': sessionStorage.getItem('token'),
+                'ConnectTo': 'HasToken.php'
+            }
+            
+        })
+        .then(response => this.setState({response})
+        .catch(error => this.setState('something went wrong: ' + {error}))
+        )
     }
-// This project was developed with WAMP local server where the host is 8080 instead of 80
+
+    
+    const AdminButton = () => {
+        if (!sessionStorage.getItem('token')){
+            //TODO not logged in message
+            return;
+        }
+        axios({
+            method: 'get',
+            url: 'http://localhost:8080/react-database/src/Components/Backend/authenticate.php/',
+            headers : {
+                'Authorization': sessionStorage.getItem('token'),
+                'ConnectTo': 'IsAdmin.php'
+            }
+            
+        })
+        // .then(response => setAlert({response})
+        // .catch(error => setAlert('something went wrong: ' + {error}))
+        // )
+    }
 
     return (
         <>
@@ -63,12 +100,21 @@ const Login = () => {
                     />
 
             </form>
-            <div id="tempAlert" />
         <button
-        onClick={(event) => LoggedIn(event)}
+        onClick={LoggedIn}
         >
-            show token
+            Do thing that only works if you are logged in (have a valid token)
         </button>
+        <button
+        onClick={AdminButton}
+        >
+            do thing that only admin can do (have a token with username 'ADMIN')
+            </button>
+        
+            <div 
+            id="tempAlert">
+                {outputText}
+            </div>
         </>
     )
 };
