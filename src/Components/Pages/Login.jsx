@@ -1,122 +1,164 @@
 import axios from 'axios';
-import {useState} from 'react'
+import { useState } from 'react'
+import './login.css'
 const Login = () => {
-    const [outputText, setOutputText] = useState('test') 
-    const [username, setUsername] = useState('test') 
-    const [password, setPassword] = useState('test') 
-    // var username,password
+
+
+
+    const [outputText, setOutputText] = useState('please enter your credentials to log in (use ADMİN and 1 for tests)')
+    const [username, setUsername] = useState('')
+    const [password, setPassword] = useState('')
+    const [formVisibility,setFormVisibility] = useState('')
+    const [logoutVisibility,setLogoutVisibility] = useState('invisible')
 
     const updateInputUsername = (e) => {
         setUsername(e.target.value)
-        console.log(username)
     };
     const updateInputPassword = (e) => {
         setPassword(e.target.value)
-        console.log(password)
     };
-    
+
 
     // This project was developed with WAMP, an apachi based local server where. the host for the server is 8080 
-    const HandleSubmit = () => {
-
+    const HandleSubmit = (e) => {
+        e.preventDefault()
         axios({
             method: 'post',
             url: 'http://localhost:8080/react-database/src/Components/Backend/Login.php/',
             data: {
-                    'username': username,
-                    'password': password
+                'username': username,
+                'password': password
             }
         })
-        .then(response => {
-        
-            sessionStorage.setItem('token', response.data.token)
-            console.log(response.data.message)
-            setOutputText(response.data.message)
-        })
-        .catch(error => console.log("something went wrong ..." + error.data));
-        };
+            .then(response => {
+
+                sessionStorage.setItem('token', response.data.token)
+                if (sessionStorage.getItem('token') !== "undefined" && sessionStorage.getItem('token') !== null){
+                    sessionStorage.setItem('loggedUser', username)
+                    setFormVisibility('invisible')
+                    setLogoutVisibility('')
+
+                }
+                setOutputText(response.data.message)
+            })
+            .catch(error => console.log("something went wrong ..." + error.data));
+    };
 
 
     const LoggedIn = () => {
-        if (!sessionStorage.getItem('token')){
-            //TODO not logged in message
+        if (sessionStorage.getItem('token') === "undefined" || sessionStorage.getItem('token') == null) {
+            setOutputText("You haven't logged in")
             return;
         }
         axios({
             method: 'get',
             url: 'http://localhost:8080/react-database/src/Components/Backend/authenticate.php/',
-            headers : {
+            headers: {
                 'Authorization': sessionStorage.getItem('token'),
                 'ConnectTo': 'HasToken.php'
             }
-            
+
         })
-        .then(response => this.setState({response})
-        .catch(error => this.setState('something went wrong: ' + {error}))
-        )
+            .then(response => setOutputText(response.data))
+                .catch(error => setOutputText('something went wrong: ' + { error })
+            )
     }
 
-    
+    const DeleteStorage = () => {
+        sessionStorage.removeItem('token')
+    }
     const AdminButton = () => {
-        if (!sessionStorage.getItem('token')){
-            //TODO not logged in message
+        if (sessionStorage.getItem('token') === "undefined" || sessionStorage.getItem('token') == null) {
+            setOutputText("You haven't logged in")
             return;
-        }
+        };
         axios({
             method: 'get',
             url: 'http://localhost:8080/react-database/src/Components/Backend/authenticate.php/',
-            headers : {
+            headers: {
                 'Authorization': sessionStorage.getItem('token'),
                 'ConnectTo': 'IsAdmin.php'
             }
-            
+
         })
-        // .then(response => setAlert({response})
-        // .catch(error => setAlert('something went wrong: ' + {error}))
-        // )
+        .then(response => setOutputText(response.data))
+        .catch(error => setOutputText('something went wrong: ' + { error })
+    )
     }
+    const Logout = (e) => {
+        e.preventDefault();
+        sessionStorage.removeItem('token');
+        sessionStorage.removeItem('username');
+        setFormVisibility("")
+        setLogoutVisibility("invisible")
+    }
+    const InvalidToken = () => {
+        sessionStorage.setItem('token', "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImludmFsaWQiLCJwYXNzIjoiaW52YWxpZCIsImlkIjoiaW52YWxpZCJ9.AQY-KURwgq68K1iqqoVcS_uPto5YkdA2lVs0zHIGDTM")
+    };
+
+    
+
 
     return (
         <>
-        <button
-        onClick={HandleSubmit}>
-            "oh god please work"
-        </button>
-            <form>
+            <div
+            className= {logoutVisibility}>
+            <button
+            onClick={Logout}
+            >log out</button>
+            <br />
+            <br />
+            </div>
+            <form
+            className= {`${formVisibility} a`}
+            >
                 <label> Username:
-                    <input type="text" 
-                    onChange={(event) => updateInputUsername(event)}
+                    <input type="text"
+                        onChange={(event) => updateInputUsername(event)}
+                        value={username}
                     />
                 </label>
-                
+            
                 <label> Password:
-                    <input 
-                    type="text" 
-                    onChange={(event) => updateInputPassword(event)}
+                    <input
+                        type="text"
+                        onChange={(event) => updateInputPassword(event)}
+                        value={password}
                     />
                 </label>
-                    <input type="Submit" 
-                    onSubmit={HandleSubmit}
-                    />
+                <input
+                    type="submit"
+                    onClick={(event) => HandleSubmit(event)}
+                    value={"Login"}
+                />
+                <br />
+                <br />
+    </form>
 
-            </form>
-        <button
-        onClick={LoggedIn}
-        >
-            Do thing that only works if you are logged in (have a valid token)
-        </button>
-        <button
-        onClick={AdminButton}
-        >
-            do thing that only admin can do (have a token with username 'ADMIN')
+            <button
+                onClick={LoggedIn}
+            >
+                Do thing that only works if you are logged in (have a valid token)
             </button>
-        
-            <div 
-            id="tempAlert">
+            <button
+                onClick={AdminButton}
+            >
+                do thing that only admin can do (have a token with username 'ADMIN')
+            </button>
+            <button
+                onClick={InvalidToken}>
+                    give invalid token (for testing)
+            </button>
+
+
+            <div
+                id="tempAlert">
                 {outputText}
             </div>
+            <button
+                onClick={DeleteStorage}>Delete token</button>
         </>
     )
 };
 
-export default Login ;
+export default Login;
