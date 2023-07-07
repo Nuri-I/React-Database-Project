@@ -65,7 +65,7 @@ const updateInputPassword = (e) => {
             <br />
         <label 
         htmlFor='password'>
-            password:
+            password: 
             <input 
             type="text" 
             id='password' 
