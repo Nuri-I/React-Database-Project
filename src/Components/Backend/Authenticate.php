@@ -34,7 +34,7 @@ $adminFiles = array('IsAdmin.php');
 if (in_array($directTo, $accessableFiles)){
     $permission = 'granted';
 // in a real program $permission variable would be treated like a key  
-//to reduce to chance of mailicous parties to guess the variable and access the backend without proper authorazition
+//to reduce to chance of mailicous parties to guess or brute force the variable and access the backend without proper authorazition
     include($directTo);
 };
 if (in_array($directTo, $adminFiles) && $stored['permission'] == "admin"){

@@ -1,6 +1,4 @@
 <?php
-require __DIR__ . '\vendor\autoload.php';
-
 $mysqli = new mysqli("localhost","root","", "my_website");
 if ($mysqli->connect_error) {
 $err_message = "Can not connect to the Database" .$mysqli->connect_error;

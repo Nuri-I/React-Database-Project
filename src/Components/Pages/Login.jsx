@@ -6,7 +6,7 @@ const Login = () => {
 
 
 
-    const [outputText, setOutputText] = useState('please enter your credentials to log in (use ADMİN and 1 for tests)')
+    const [outputText, setOutputText] = useState('please enter your credentials to log in (use ADMIN and 1 for admin account, IamFirst and 1 for member account according to CREATE SQL TABLE.sql)')
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [formVisibility,setFormVisibility] = useState('')
@@ -17,8 +17,8 @@ const Login = () => {
             setLogoutVisibility('');
             setFormVisibility('invisible');   
         };
-    });
-
+    }); 
+ 
     const updateInputUsername = (e) => {
         setUsername(e.target.value)
     };
@@ -29,7 +29,7 @@ const Login = () => {
 
     // This project was developed with WAMP, an apachi based local server where. the host for the server is 8080 
     const HandleSubmit = (e) => {
-        e.preventDefault()
+
         axios({
             method: 'post',
             url: 'http://localhost:8080/react-database/src/Components/Backend/Login.php/',

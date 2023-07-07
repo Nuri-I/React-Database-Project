@@ -2,7 +2,7 @@ import './App.css';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from './Components/Pages/Login.jsx';
 import Register from './Components/Pages/Register.jsx';
-import Password from './Components/Pages/ForgotPassword.jsx';
+import ChangePass from './Components/Pages/ForgotPassword.jsx';
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
       <Routes>
         <Route index element={<Login />}/>
         <Route path="register" element={<Register />}/>
-        <Route path="forgotpassword" element={<Password />}/>
+        <Route path="forgotpassword" element={<ChangePass />}/>
       </Routes>
     </BrowserRouter>
   );

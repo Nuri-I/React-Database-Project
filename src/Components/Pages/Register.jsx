@@ -46,37 +46,39 @@ const updateInputPassword = (e) => {
         <label 
         htmlFor='username'>
             username: 
+        </label>
             <input 
             type="text" 
             id='username' 
             onChange={updateInputUsername}/>
-        </label>
+
             <br />
             <br />
         <label 
         htmlFor='email'>
-            email:  
+            email:
+        </label>
             <input 
             type="text" 
             id='email' 
             onChange={updateInputEmail}/>
-        </label>
+        
             <br />
             <br />
         <label 
         htmlFor='password'>
             password: 
+        </label>
             <input 
             type="text" 
             id='password' 
             onChange={updateInputPassword}/>
-        </label>
+
     </form>
         <br />
-        <p>register</p>
         <button
         onClick={HandleSubmit}>
-            lol
+            Register
         </button>
         <br />
         <br />
