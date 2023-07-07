@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useState } from 'react'
+import { useState, useEffect} from 'react'
 import './login.css'
 import {Link} from 'react-router-dom'
 const Login = () => {
@@ -11,6 +11,13 @@ const Login = () => {
     const [password, setPassword] = useState('')
     const [formVisibility,setFormVisibility] = useState('')
     const [logoutVisibility,setLogoutVisibility] = useState('invisible')
+
+    useEffect(() => {
+        if(sessionStorage.getItem('token') !== "undefined" && sessionStorage.getItem('token') !== null) {
+            setLogoutVisibility('');
+            setFormVisibility('invisible');   
+        };
+    });
 
     const updateInputUsername = (e) => {
         setUsername(e.target.value)
@@ -112,6 +119,7 @@ const Login = () => {
             </div>
             <form
             className= {`${formVisibility} a`}
+            onSubmit={(event) => event.preventDefault()}
             >
                 <label> Username:
                     <input type="text"
