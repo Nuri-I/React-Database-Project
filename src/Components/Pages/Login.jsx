@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useState } from 'react'
 import './login.css'
+import {Link} from 'react-router-dom'
 const Login = () => {
 
 
@@ -60,7 +61,7 @@ const Login = () => {
 
         })
             .then(response => setOutputText(response.data))
-                .catch(error => setOutputText('something went wrong: ' + { error })
+            .catch(error => setOutputText('something went wrong: ' + { error })
             )
     }
 
@@ -157,6 +158,8 @@ const Login = () => {
             </div>
             <button
                 onClick={DeleteStorage}>Delete token</button>
+
+            <Link to="/register">go to register hopefully</Link>
         </>
     )
 };

@@ -1,7 +1,6 @@
 <?php
 require __DIR__ . '\vendor\autoload.php';
 use Firebase\JWT\JWT;
-use Firebase\JWT\Key;
 
 $mysqli = new mysqli("localhost","root","", "my_website");
 if ($mysqli->connect_error) {
@@ -42,7 +41,7 @@ $key = "key";
 $payload = [
     'username' => $stored['username'],
     'pass' => substr($stored['pass'], -6),
-//the reason for adding part of the password hash is to increasr the pussibility that the session token changes up on password changes
+//the reason for adding part of the password hash is to increase the possibility that the session token changes up on password changes
     'id' => $stored['id']
 ];
 $token = JWT::encode($payload, $key, 'HS256');
